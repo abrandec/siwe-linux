@@ -1,0 +1,9 @@
+[package]
+name = "siwe-linux-rollup"
+version = "0.0.1"
+edition = { workspace = true }
+resolver = "2"
+authors = { workspace = true }
+publish = false
+
+[dependencies]
