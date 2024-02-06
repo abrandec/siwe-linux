@@ -1,0 +1,58 @@
+on:
+  push:
+    branches:
+      - master
+  workflow_call:
+
+name: Build and test
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - os: ubuntu-20.04
+              config_args: ""
+              packages: "libpam0g-dev pamtester"
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install basic dependencies
+        run: |
+          apt-get update
+          apt-get install -y build-essential git curl
+      - name: Set Directory Variables
+        run: |
+          set_dir() {
+            echo "$1=$(git rev-parse --show-toplevel)/$2" >> $GITHUB_ENV
+          }    
+
+          set_dir ROOT_DIR ""
+          set_dir DEBUG_DIR "target/debug"
+          set_dir RELEASE_DIR "target/release"
+          set_dir PAM_MODULE_DIR "crates/pam-module"
+          set_dir PAM_CLIENT_DIR "crates/pam-client"
+          set_dir CLI_DIR "crates/cli"
+          set_dir ROLLUP_DIR "crates/rollup"
+      - name: Use cargo cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ matrix.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Install the rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build and test pam module
+        env:
+          CONFIGURE_ARGS: ${{ matrix.config_args }}
+          PACKAGES: ${{ matrix.packages }}
+          ROOT_DIR: ${{ env.ROOT_DIR }}
+          PAM_DIR: ${{ env.PAM_DIR }}
+          CLI_DIR: ${{ env.CLI_DIR }}
+          ROLLUP_DIR: ${{ env.ROLLUP_DIR }}
+        run: |
+          tests/pam/build_and_test.sh

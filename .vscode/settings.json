@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./crates/pam-client/Cargo.toml"
+    ]
+}

@@ -3,7 +3,7 @@
 resolver = "2"
 
 members = [
-    "crates/siwe-pam",
+    "crates/pam",
     "crates/cli",
     "crates/rollup"
 ]
