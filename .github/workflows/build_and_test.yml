@@ -30,7 +30,7 @@ jobs:
           set_dir ROOT_DIR ""
           set_dir DEBUG_DIR "target/debug"
           set_dir RELEASE_DIR "target/release"
-          set_dir PAM_MODULE_DIR "crates/pam-module"
+          set_dir PAM_MODULE_DIR "crates/pam"
           set_dir PAM_CLIENT_DIR "crates/pam-client"
           set_dir CLI_DIR "crates/cli"
           set_dir ROLLUP_DIR "crates/rollup"
@@ -55,4 +55,5 @@ jobs:
           CLI_DIR: ${{ env.CLI_DIR }}
           ROLLUP_DIR: ${{ env.ROLLUP_DIR }}
         run: |
+          cp $PAM_MODULE_DIR/conf/siwe-auth /etc/pam.d/
           tests/pam/build_and_test.sh

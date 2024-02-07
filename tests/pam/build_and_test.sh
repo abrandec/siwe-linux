@@ -3,6 +3,14 @@
 # Install dependencies and build PAM module
 apt-get install -y $PACKAGES
 cargo build --manifest-path $PAM_MODULE_DIR/Cargo.toml
+mv $ROOT_DIR/target/debug/libpam_siwe.so /lib/aarch64-linux-gnu/security/pam_siwe.so
+
+# PAM c test
+g++ -o $PAM_MODULE_DIR/test_pam $PAM_MODULE_DIR/test.c -lpam -lpam_misc
+
+$PAM_MODULE_DIR/test_pam pls_work
+
+# Setup the environment variables
 cp $ROOT_DIR/.env.example $ROOT_DIR/.env
 
 update_env_vars() {
@@ -23,10 +31,7 @@ update_env_vars() {
 
 update_env_vars "$ROOT_DIR/.env" "WC_PROJECT_ID=69420"
 
-# Install PAM module and configure PAM files
-cp $PAM_MODULE_DIR/conf/siwe-auth /etc/pam.d/
-
 # Build the PAM client and run tests
-cargo build --manifest-path $PAM_CLIENT_DIR/Cargo.toml
-ls $DEBUG_DIR
-cargo run --bin $DEBUG_DIR/pam-siwe-client
+#cargo build --manifest-path $PAM_CLIENT_DIR/Cargo.toml
+#ls $DEBUG_DIR
+#cargo run --bin $DEBUG_DIR/pam-siwe-client

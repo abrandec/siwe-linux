@@ -1,2 +1,1 @@
 auth sufficient pam_siwe.so
-account sufficient pam_siwe.so
