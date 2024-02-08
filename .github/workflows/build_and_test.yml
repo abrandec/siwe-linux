@@ -22,11 +22,11 @@ jobs:
 
       - name: Check if act is running
         run: |
-          SUDO=$(command -v sudo &>/dev/null && echo "sudo" || echo "")
+          echo "Running locally with act"
+          apt-get update && apt-get install sudo
       - name: Install basic dependencies
         run: |
-          $SUDO apt-get update
-          $SUDO apt-get install -y build-essential git curl
+          sudo apt-get install -y build-essential git curl
       - name: Set Directory Variables
         run: |
           set_dir() {
@@ -56,7 +56,6 @@ jobs:
         env:
           CONFIGURE_ARGS: ${{ matrix.config_args }}
           PACKAGES: ${{ matrix.packages }}
-          SUDO: ${{ env.SUDO }}
           ROOT_DIR: ${{ env.ROOT_DIR }}
           PAM_DIR: ${{ env.PAM_DIR }}
           CLI_DIR: ${{ env.CLI_DIR }}

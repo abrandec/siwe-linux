@@ -3,7 +3,7 @@
 # TODO: All this code needs to be platform specific!
 
 # Install dependencies and build PAM module
-$SUDO apt-get install -y $PACKAGES
+sudo apt-get install -y $PACKAGES
 cargo build --manifest-path $PAM_MODULE_DIR/Cargo.toml
 mv $ROOT_DIR/target/debug/libpam_siwe.so /lib/aarch64-linux-gnu/security/pam_siwe.so
 
