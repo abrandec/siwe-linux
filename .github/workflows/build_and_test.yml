@@ -22,9 +22,7 @@ jobs:
 
       - name: Check if act is running
         run: |
-          SUDO=$(if [ "${ACT}" == "true" ]; then echo ""; else echo "sudo"; fi)
-        env:
-          ACT: ${{ env.ACT }}
+          SUDO=$(command -v sudo &>/dev/null && echo "sudo" || echo "")
       - name: Install basic dependencies
         run: |
           $SUDO apt-get update
