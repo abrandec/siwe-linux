@@ -1,14 +1,25 @@
-#!/bin/sh
+#!/bin/bash
 
 # Install dependencies and build PAM module
 apt-get install -y $PACKAGES
 cargo build --manifest-path $PAM_MODULE_DIR/Cargo.toml
 mv $ROOT_DIR/target/debug/libpam_siwe.so /lib/aarch64-linux-gnu/security/pam_siwe.so
 
-# PAM c test
+# Run PAM test.c
 g++ -o $PAM_MODULE_DIR/test_pam $PAM_MODULE_DIR/test.c -lpam -lpam_misc
 
-$PAM_MODULE_DIR/test_pam pls_work
+test_data=("siwe_user password" "siwe_user incorrect_password" "incorrect_user password" "incorrect_user incorrect_password")
+
+# Iterate over the array of tuples
+for tuple in "${test_data[@]}"
+do
+  # Use read to split the tuple into two variables
+  read -r user pass <<< "$tuple"
+  
+  # Now you can use $user and $pass as separate variables
+  echo  $pass | $PAM_MODULE_DIR/test_pam $user
+  echo "-----------------------------------"
+done
 
 # Setup the environment variables
 cp $ROOT_DIR/.env.example $ROOT_DIR/.env

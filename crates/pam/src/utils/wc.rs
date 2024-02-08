@@ -1,5 +1,5 @@
 use rand::{distributions::Alphanumeric, Rng};
-use walletconnect_sdk;
+// use walletconnect_sdk;
 
 // Generate a walletconnect URI (2.0 format)
 // Not a complete implementation, just enough to create a connection

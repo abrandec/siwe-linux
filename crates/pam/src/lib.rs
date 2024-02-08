@@ -1,6 +1,10 @@
+// PAM modules
 pub mod pam;
-//pub mod wc;
+
+// Various utilities
 pub mod utils;
+
+// Tests
 pub mod tests;
 
 use pam_bindings::conv::{Inner, Conv};
