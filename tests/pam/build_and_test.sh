@@ -1,26 +1,33 @@
 #!/bin/bash
 
+# TODO: All this code needs to be platform specific!
+
 # Install dependencies and build PAM module
 apt-get install -y $PACKAGES
 cargo build --manifest-path $PAM_MODULE_DIR/Cargo.toml
 mv $ROOT_DIR/target/debug/libpam_siwe.so /lib/aarch64-linux-gnu/security/pam_siwe.so
 
-# Run PAM test.c
+# Compile the test program
 g++ -o $PAM_MODULE_DIR/test_pam $PAM_MODULE_DIR/test.c -lpam -lpam_misc
 
+# Create data for testing
 test_data=("siwe_user password" "siwe_user incorrect_password" "incorrect_user password" "incorrect_user incorrect_password")
 
-# Iterate over the array of tuples
+# Run the tests
+# Loop through the test data
 for tuple in "${test_data[@]}"
 do
   # Use read to split the tuple into two variables
   read -r user pass <<< "$tuple"
   
-  # Now you can use $user and $pass as separate variables
+  # Now $user and $pass can be used as separate variables
   echo  $pass | $PAM_MODULE_DIR/test_pam $user
   echo "-----------------------------------"
 done
 
+# End of tests for PAM module
+
+# Currently unneeded tests that will be built later
 # Setup the environment variables
 cp $ROOT_DIR/.env.example $ROOT_DIR/.env
 
@@ -40,9 +47,4 @@ update_env_vars() {
   done
 }
 
-update_env_vars "$ROOT_DIR/.env" "WC_PROJECT_ID=69420"
-
-# Build the PAM client and run tests
-#cargo build --manifest-path $PAM_CLIENT_DIR/Cargo.toml
-#ls $DEBUG_DIR
-#cargo run --bin $DEBUG_DIR/pam-siwe-client
+update_env_vars "$ROOT_DIR/.env" "WC_PROJECT_ID=12345"
