@@ -2,6 +2,9 @@
 
 # TODO: All this code needs to be platform specific!
 
+# Move pam conf file to /etc/pam.d/
+cp $PAM_MODULE_DIR/conf/siwe-auth /etc/pam.d/
+
 # Install dependencies and build PAM module
 sudo apt-get install -y $PACKAGES
 cargo build --manifest-path $PAM_MODULE_DIR/Cargo.toml

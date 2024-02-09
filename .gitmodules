@@ -1,3 +1,0 @@
-[submodule "submodules/pam-rs"]
-	path = submodules/pam-rs
-	url = https://github.com/abrandec/pam-rs

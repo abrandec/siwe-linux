@@ -19,11 +19,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{secrets.PAT}}
-
       - name: Check if act is running
         run: |
-          echo "Running locally with act"
-          apt-get update && apt-get install sudo
+          apt-get update && apt-get install -y sudo
       - name: Install basic dependencies
         run: |
           sudo apt-get install -y build-essential git curl
@@ -57,9 +55,10 @@ jobs:
           CONFIGURE_ARGS: ${{ matrix.config_args }}
           PACKAGES: ${{ matrix.packages }}
           ROOT_DIR: ${{ env.ROOT_DIR }}
+          DEBUG_DIR: ${{ env.DEBUG_DIR }}
+          RELEASE_DIR: ${{ env.RELEASE_DIR }}
           PAM_DIR: ${{ env.PAM_DIR }}
           CLI_DIR: ${{ env.CLI_DIR }}
           ROLLUP_DIR: ${{ env.ROLLUP_DIR }}
         run: |
-          cp $PAM_MODULE_DIR/conf/siwe-auth /etc/pam.d/
-          tests/pam/build_and_test.sh
+          crates/pam/build_and_test.sh
