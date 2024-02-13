@@ -1,11 +1,25 @@
-use std::{ffi::CStr, str::FromStr};
-
+use std::{ffi::CStr, str::FromStr, env};
+use dotenv::dotenv;
+use fast_qr::qr;
 use pam_bindings::{
-    constants::{PamFlag, PamResultCode, PAM_PROMPT_ECHO_ON},
-    conv::Conv,
+    constants::{PamFlag, PamResultCode},
     module::{PamHandle, PamHooks},
-    pam_try,
 };
+use structopt::StructOpt;
+use walletconnect_sdk;
+
+use crate::utils::wc::{generate_uri_sym, generate_qr_unicode, generate_wc_uri};
+
+#[derive(StructOpt)]
+struct Args {
+    /// Specify HTTP address.
+    #[structopt(short, long, default_value = "https://relay.walletconnect.com/rpc")]
+    address: String,
+
+    /// Specify WalletConnect project ID.
+    #[structopt(short, long, default_value = "")]
+    project_id: String,
+}
 
 struct PamSiwe;
 pam_bindings::pam_hooks!(PamSiwe);
@@ -13,28 +27,15 @@ pam_bindings::pam_hooks!(PamSiwe);
 impl PamHooks for PamSiwe {
     fn sm_authenticate(pamh: &mut PamHandle, _args: Vec<&CStr>, _flags: PamFlag) -> PamResultCode {
         eprintln!("Let's authenticate!");
-        let user = pam_try!(pamh.get_user(None));
+        dotenv().ok();
+        let address = env::var("WC_ADDRESS").expect("WC_ADDRESS must be set");
+        let project_id = env::var("WC_PROJECT_ID").expect("WC_PROJECT_ID must be set");
+        let uri = generate_uri_sym("0d775e27722b25c0b166f28fe4c7893cfb78f340ae4ffea8629d8b538d3a7044".to_string(), "8e887df02c5686637b59c239a0adb02fb86181477625bcfd2083595533fc4477".to_string());
+        let qr = generate_qr_unicode(uri);
+        //let wc_uri = generate_wc_uri("7b3a9ff4317a47a87eb8451472548e3501ef116e66db15b166080c28b67da8b1".to_string());
+        //let qr_code = generate_wc_qr_code("uri".to_string());
 
-        let conv = match pamh.get_item::<Conv>() {
-            Ok(Some(conv)) => conv,
-            Ok(None) => {
-                unreachable!("No conv available");
-            }
-            Err(err) => {
-                println!("Couldn't get pam_conv");
-                return err;
-            }
-        };
-        
-        let password = pam_try!(conv.send(PAM_PROMPT_ECHO_ON, "Password:"));
-        
-        let expected_cstr_password = CStr::from_bytes_with_nul(b"password\0").unwrap();
-
-        println!("\nUser: {}, password: {:?}", user, password);
-        if user != "siwe_user" || password != Some(expected_cstr_password) {
-            return PamResultCode::PAM_AUTH_ERR;
-        }
-        
+        eprintln!("CONNECTING: {}", qr);
         return PamResultCode::PAM_SUCCESS;
     }
 

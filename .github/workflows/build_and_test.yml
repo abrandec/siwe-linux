@@ -4,7 +4,7 @@ on:
       - main
   workflow_call:
 
-name: Build and test
+name: Build and Test
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -14,51 +14,25 @@ jobs:
           include:
             - os: ubuntu-20.04
               config_args: ""
-              packages: "libpam0g-dev pamtester"
+              packages: "build-essential sudo git curl pkg-config openssl libssl-dev libpam0g-dev llvm-11 clang libclang-dev"
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{secrets.PAT}}
-      - name: Check if act is running
+      - name: Install Dependencies
+        env:
+          PACKAGES: ${{ matrix.packages }}
         run: |
-          apt-get update && apt-get install -y sudo
-      - name: Install basic dependencies
-        run: |
-          sudo apt-get install -y build-essential git curl
-      - name: Set Directory Variables
-        run: |
-          set_dir() {
-            echo "$1=$(git rev-parse --show-toplevel)/$2" >> $GITHUB_ENV
-          }    
-
-          set_dir ROOT_DIR ""
-          set_dir DEBUG_DIR "target/debug"
-          set_dir RELEASE_DIR "target/release"
-          set_dir PAM_MODULE_DIR "crates/pam"
-          set_dir PAM_CLIENT_DIR "crates/pam-client"
-          set_dir CLI_DIR "crates/cli"
-          set_dir ROLLUP_DIR "crates/rollup"
-      - name: Use cargo cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ matrix.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          apt-get update && apt-get install -y $PACKAGES
+          curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to ~/bin
+          mkdir -p ~/bin
+          echo 'export PATH="$PATH:$HOME/bin"' >> ~/.bashrc
       - name: Install the rust toolchain
         uses: dtolnay/rust-toolchain@stable
       - name: Build and test pam module
         env:
           CONFIGURE_ARGS: ${{ matrix.config_args }}
-          PACKAGES: ${{ matrix.packages }}
-          ROOT_DIR: ${{ env.ROOT_DIR }}
-          DEBUG_DIR: ${{ env.DEBUG_DIR }}
-          RELEASE_DIR: ${{ env.RELEASE_DIR }}
-          PAM_DIR: ${{ env.PAM_DIR }}
-          CLI_DIR: ${{ env.CLI_DIR }}
-          ROLLUP_DIR: ${{ env.ROLLUP_DIR }}
         run: |
-          crates/pam/build_and_test.sh
+          source ~/.bashrc
+          just install-pam
+          just test-pam

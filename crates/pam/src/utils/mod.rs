@@ -1,6 +1,3 @@
-// PAM client ffi bindings
-pub mod pam_client;
-
 // Bare bones /etc/pam.d/ file parser
 // pub mod pam_conf_parser;
 

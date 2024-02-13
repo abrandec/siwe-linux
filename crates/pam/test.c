@@ -7,34 +7,21 @@ const struct pam_conv conv = {
 	NULL
 };
 
+// We'll do the entire authentication proccess in pam.rs for now
+// This c file will be removed once pam_start() is written for pam-rs
 int main(int argc, char *argv[]) {
 	pam_handle_t* pamh = NULL;
 	int retval;
-	const char* user = "nobody";
-
-	if(argc != 2) {
-		printf("Usage: app [username]\n");
-		exit(1);
-	}
-
-	user = argv[1];
-
-    // Test with correct password
-    printf("Test with correct password\n");
+	const char* user = "";
 
 	retval = pam_start("siwe-auth", user, &conv, &pamh);
 
-	// Are the credentials correct?
+	retval = pam_authenticate(pamh, 0);
+
 	if (retval == PAM_SUCCESS) {
-		printf("Credentials accepted.\n");
-		retval = pam_authenticate(pamh, 0);
-	}
-    
-	// Did everything work?
-	if (retval == PAM_SUCCESS) {
-		printf("Authentication Success!\n");
+		printf("PAM_SUCCESS\n");
 	} else {
-		printf("Authenticated failed!\n");
+		printf("PAM_AUTH_ERR\n");
 	}
 
 	// close PAM (end session)

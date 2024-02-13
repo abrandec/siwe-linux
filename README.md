@@ -12,8 +12,7 @@
 2. [act](https://github.com/nektos/act)
 
 ### Testing
-
 Running tests:
 ```
-act -j build
+act -j build --container-architecture linux/amd64
 ```
