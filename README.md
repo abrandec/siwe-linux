@@ -12,7 +12,6 @@
 2. [act](https://github.com/nektos/act)
 
 ### Testing
-Running tests:
 Check the Justfile for available commands
 ```
 ./act.sh {Justfile command}
