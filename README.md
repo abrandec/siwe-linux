@@ -13,6 +13,10 @@
 
 ### Testing
 Running tests:
+Check the Justfile for available commands
 ```
-act -j build --container-architecture linux/amd64
+./act.sh {Justfile command}
+
+example:
+./act.sh check-pam
 ```

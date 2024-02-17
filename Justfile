@@ -1,5 +1,24 @@
+#############
+# Variables #
+#############
+
+# Crate directories. Set here in case we want to change them later
 pam_dir := "crates/pam"
+client_dir := "crates/client"
+rollup_dir := "crates/rollup"
+
+# This is the directory where the PAM module will be installed. Limited to Ubuntu x86_64-linux-gnu for now
 pam_so_dir := "/lib/x86_64-linux-gnu/security"
+
+#######################
+# PAM module commands #
+#######################
+
+check-pam:
+	cargo check --manifest-path {{pam_dir}}/Cargo.toml
+
+build-pam:
+	cargo build --release --manifest-path {{pam_dir}}/Cargo.toml
 
 # Debugging PAM
 install-pam:
@@ -10,9 +29,15 @@ install-pam:
 	mv target/debug/libpam_siwe.so {{pam_so_dir}}/pam_siwe.so
 
 test-pam:
-	g++ -o {{pam_dir}}/test_pam {{pam_dir}}/test.c -lpam -lpam_misc
-	./{{pam_dir}}/test_pam
+	cargo test -p pam-siwe -- test_pam
+
+#######################
+# All-in-one commands #
+#######################
+
+build-all:
+	cargo build --release
 
 # Install all dependencies
-install:
-	echo "This will build and install the PAM module"
+install-all:
+	echo "This will build and install the PAM module, client, and rollup"

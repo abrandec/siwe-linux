@@ -1,0 +1,31 @@
+on:
+  push:
+    branches:
+      - main
+  workflow_call:
+
+name: Build and Test
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+        fail-fast: false
+        matrix:
+          include:
+            - os: ubuntu-20.04
+              config_args: ""
+              packages: ""
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{secrets.PAT}}
+      - name: Install the rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Build and test pam module
+        env:
+          CONFIGURE_ARGS: ${{ matrix.config_args }}
+          COMMAND: ${{ vars.COMMAND }}
+        run: |
+          echo "Running $COMMAND"
+          just $COMMAND
+          

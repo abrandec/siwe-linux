@@ -1,5 +1,10 @@
 {
     "rust-analyzer.linkedProjects": [
-        "./Cargo.toml"
-    ]
+        "./Cargo.toml",
+        "./crates/pam/Cargo.toml"
+    ],
+    "terminal.integrated.env.osx": {
+        "LIBCLANG_PATH": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+    },
+    "rust-analyzer.showUnlinkedFileNotification": false,
 }

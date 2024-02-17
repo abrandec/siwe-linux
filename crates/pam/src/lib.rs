@@ -1,9 +1,11 @@
-// PAM modules
+// Main PAM module
 pub mod pam;
+
+pub mod misc;
 
 // Various utilities
 pub mod utils;
 
-// Tests
+#[cfg(test)]
 pub mod tests;
 
