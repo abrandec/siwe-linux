@@ -10,8 +10,6 @@ use pam_bindings::{
 };
 use structopt::StructOpt;
 use walletconnect_sdk;
-
-
 use crate::utils::wc::{generate_uri_sym, generate_qr_unicode, generate_wc_uri};
 
 #[derive(StructOpt)]
@@ -43,6 +41,12 @@ impl PamHooks for PamSiwe {
                 return err;
             }
         };
+        
+        let password = pam_try!(conv.send(PAM_PROMPT_ECHO_ON, "Password:"));
+        
+        let expected_cstr_password = CStr::from_bytes_with_nul(b"password\0").unwrap();
+
+        println!("\nUser: {}, password: {:?}", user, password);
 
         return PamResultCode::PAM_SUCCESS;
     }

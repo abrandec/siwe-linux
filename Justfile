@@ -22,14 +22,14 @@ build-pam:
 	cargo build --manifest-path {{pam_dir}}/Cargo.toml
 
 # Debugging PAM
-install-pam:
+configure-pam:
 	cp {{pam_dir}}/conf/siwe-auth /etc/pam.d/
 	cp .env.example .env
 	mv target/debug/libpam_siwe.so {{pam_so_dir}}/pam_siwe.so
 
 test-pam:
 	just build-pam
-	just install-pam
+	just configure-pam
 	cargo build --manifest-path {{pam_tests_dir}}/Cargo.toml
 	./target/debug/pam-tests
 
