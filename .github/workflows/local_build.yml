@@ -19,8 +19,18 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{secrets.PAT}}
+      - name: Configure AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.13.33.zip" -o "awscliv2.zip" && \
+          unzip awscliv2.zip && \
+          sudo ./aws/install --update 
+          echo -e "${{secrets.AWS_ACCESS_KEY_ID}}\n${{secrets.AWS_SECRET_ACCESS_KEY}}\n${{secrets.AWS_DEFAULT_REGION}}\n" | aws configure
       - name: Install the rust toolchain
         uses: dtolnay/rust-toolchain@stable
+      
+      - name: Download dependency cache from S3
+        # If the cache doesn't exist in GitHub Artifacts, try S3
+        run: aws s3 cp s3://${{vars.S3_BUCKET}}/rust-dependency-cache.tar.gz . && tar -xzf rust-dependency-cache.tar.gz
       - name: Build and test pam module
         env:
           CONFIGURE_ARGS: ${{ matrix.config_args }}
@@ -28,4 +38,3 @@ jobs:
         run: |
           echo "Running $COMMAND"
           just $COMMAND
-          

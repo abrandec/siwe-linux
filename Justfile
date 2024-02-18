@@ -6,6 +6,7 @@
 pam_dir := "crates/pam"
 client_dir := "crates/client"
 rollup_dir := "crates/rollup"
+pam_tests_dir := "crates/pam-tests"
 
 # This is the directory where the PAM module will be installed. Limited to Ubuntu x86_64-linux-gnu for now
 pam_so_dir := "/lib/x86_64-linux-gnu/security"
@@ -18,18 +19,19 @@ check-pam:
 	cargo check --manifest-path {{pam_dir}}/Cargo.toml
 
 build-pam:
-	cargo build --release --manifest-path {{pam_dir}}/Cargo.toml
+	cargo build --manifest-path {{pam_dir}}/Cargo.toml
 
 # Debugging PAM
 install-pam:
 	cp {{pam_dir}}/conf/siwe-auth /etc/pam.d/
 	cp .env.example .env
-	cargo build --manifest-path {{pam_dir}}/Cargo.toml
-	find /lib -type d -name "*-linux-gnu"
 	mv target/debug/libpam_siwe.so {{pam_so_dir}}/pam_siwe.so
 
 test-pam:
-	cargo test -p pam-siwe -- test_pam
+	just build-pam
+	just install-pam
+	cargo build --manifest-path {{pam_tests_dir}}/Cargo.toml
+	./target/debug/pam-tests
 
 #######################
 # All-in-one commands #

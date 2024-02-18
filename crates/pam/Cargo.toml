@@ -26,8 +26,18 @@ walletconnect_sdk = { git = "https://github.com/WalletConnect/WalletConnectRust"
 uzers = { version = "0.11.3", optional = true }
 memchr = "2.5.0"
 pam-bindings = { git = "https://github.com/abrandec/pam-rs.git", package = "pam-bindings" }
-pam = { git = "https://github.com/1wilkens/pam", rev = "daf26ae3512d8e5a7478ccff1e4232ef5ebf9b03" }
 pam-sys = "1.0.0-alpha5"
 pam-macros = "=0.0.3"
+
 [dev-dependencies]
-pam = { git = "https://github.com/1wilkens/pam", rev = "daf26ae3512d8e5a7478ccff1e4232ef5ebf9b03" }
+libc = "^0.2"
+rand = "0.8.5"
+dotenv = "0.15.0"
+fast_qr = "0.11.0"
+structopt = "0.3.26"
+walletconnect_sdk = { git = "https://github.com/WalletConnect/WalletConnectRust", rev = "6a24d5f63a4c428e9a3d7832af3b0fdef2e70905" }
+uzers = { version = "0.11.3" }
+memchr = "2.5.0"
+pam-bindings = { git = "https://github.com/abrandec/pam-rs.git", package = "pam-bindings" }
+pam-sys = "1.0.0-alpha5"
+pam-macros = "=0.0.3"

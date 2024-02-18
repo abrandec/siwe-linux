@@ -1,0 +1,10 @@
+[package]
+name = "pam-tests"
+version = "0.0.1"
+edition = "2021"
+resolver = "2"
+authors = ["Abran DeCarlo <abrandecarlo@protonmail.com>"]
+publish = false
+
+[dependencies]
+pam-siwe = { path = "../pam", features = ["client"] }

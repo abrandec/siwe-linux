@@ -1,6 +1,7 @@
 use std::{ffi::CStr, str::FromStr, env};
 use dotenv::dotenv;
 use fast_qr::qr;
+use crate::misc::Client;
 use pam_bindings::{
     constants::{PamFlag, PamResultCode, PAM_PROMPT_ECHO_ON},
     conv::Conv,
@@ -9,6 +10,7 @@ use pam_bindings::{
 };
 use structopt::StructOpt;
 use walletconnect_sdk;
+
 
 use crate::utils::wc::{generate_uri_sym, generate_qr_unicode, generate_wc_uri};
 
@@ -41,16 +43,7 @@ impl PamHooks for PamSiwe {
                 return err;
             }
         };
-        
-        let password = pam_try!(conv.send(PAM_PROMPT_ECHO_ON, "Password:"));
-        
-        let expected_cstr_password = CStr::from_bytes_with_nul(b"password\0").unwrap();
 
-        println!("\nUser: {}, password: {:?}", user, password);
-        if user != "user_1" || password != Some(expected_cstr_password) {
-            return PamResultCode::PAM_AUTH_ERR;
-        }
-        
         return PamResultCode::PAM_SUCCESS;
     }
 
@@ -64,4 +57,3 @@ impl PamHooks for PamSiwe {
         return PamResultCode::PAM_SUCCESS
     }
 }
-

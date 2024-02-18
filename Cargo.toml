@@ -1,11 +1,9 @@
 [workspace]
-
-resolver = "2"
-
 members = [
     "crates/pam",
     "crates/cli",
-    "crates/rollup"
+    "crates/rollup",
+    "crates/pam-tests"
 ]
 
 [workspace.package]

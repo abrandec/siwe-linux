@@ -7,9 +7,11 @@
 - `crates/rollup`: Avail rollup for backing up/restoring authentication configurations
 
 ## Getting started
-### Requirements
+### 1. Requirements
 1. [docker](https://www.docker.com/)
 2. [act](https://github.com/nektos/act)
+
+### 2. Configure S3 Bucket for caching dependencies
 
 ### Testing
 Check the Justfile for available commands
