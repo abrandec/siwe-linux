@@ -7,4 +7,4 @@ authors = ["Abran DeCarlo <abrandecarlo@protonmail.com>"]
 publish = false
 
 [dependencies]
-pam-siwe = { path = "../pam", features = ["client"] }
+pam-siwe = { path = "../pam" }
