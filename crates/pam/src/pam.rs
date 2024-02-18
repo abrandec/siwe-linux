@@ -47,6 +47,9 @@ impl PamHooks for PamSiwe {
         let expected_cstr_password = CStr::from_bytes_with_nul(b"password\0").unwrap();
 
         println!("\nUser: {}, password: {:?}", user, password);
+        if user != "user_1" || password != Some(expected_cstr_password) {
+            return PamResultCode::PAM_AUTH_ERR;
+        }
 
         return PamResultCode::PAM_SUCCESS;
     }
