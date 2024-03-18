@@ -20,7 +20,7 @@ module = []
 libc = "^0.2"
 rand = "0.8.5"
 dotenv = "0.15.0"
-fast_qr = "0.11.0"
+fast_qr = "0.12.1"
 structopt = "0.3.26"
 walletconnect_sdk = { git = "https://github.com/WalletConnect/WalletConnectRust", rev = "6a24d5f63a4c428e9a3d7832af3b0fdef2e70905" }
 uzers = { version = "0.11.3", optional = true }
@@ -33,7 +33,7 @@ pam-macros = "=0.0.3"
 libc = "^0.2"
 rand = "0.8.5"
 dotenv = "0.15.0"
-fast_qr = "0.11.0"
+fast_qr = "0.12.1"
 structopt = "0.3.26"
 walletconnect_sdk = { git = "https://github.com/WalletConnect/WalletConnectRust", rev = "6a24d5f63a4c428e9a3d7832af3b0fdef2e70905" }
 uzers = { version = "0.11.3" }
